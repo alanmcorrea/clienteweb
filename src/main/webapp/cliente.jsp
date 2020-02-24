@@ -15,30 +15,52 @@
 				String msgString = (String) msg;
 				out.print(msg);
 			}
+			
+			Cliente cliente = (Cliente) request.getAttribute("cliente");
+			Object indice = request.getAttribute("indice");
 		%>
 	</div>
 
 	<form method="post" action="cliente.do">
+	
+		<input type="hidden" name="i" value="<%=indice%>">
 		Nome:
-		<input type="text" name="name"/>
+		<input type="text" value="<%=cliente.getNome() %>" name="name"/>
 		<button>Salvar</button>
 	</form>
+	<table border="1">
 	
+		<tr>
+			<th>Nome</th>
+			<th>Ação</th>
+		</tr>
 	<%
 
 		List<Cliente> lista = (List<Cliente>) request.getAttribute("lista");
 		
 	int i = 0;
 		for (Cliente c :lista){
-			out.print(c.getNome()+ " <a href='javascript:confirmar("+i+");'>Excluir</a><br/>");
+	%>		
+		<tr>
+			<td>
+				<%=c.getNome()%> 
+			</td>
+			<td>
+				<a href="javascript:confirmar(<%=i%>)">Excluir</a>
+				<a href="cliente.do?i=<%=i%>&acao=editar">Editar</a><br/>
+			</td>
+			
+		</tr>		
+	<%
 			i++;	 
-	}
+		}
 	%>
+	</table>
 	<script>
 		function confirmar(pi){
 			
 			if(window.confirm("Tem certeza que deseja excluir?")){
-				location.href="cliente.do?i=" + pi;
+				location.href="cliente.do?i=" + pi + "&acao=excluir";
 			}
 		}
 	</script>

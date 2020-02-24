@@ -43,14 +43,36 @@ public class ClientServlet extends HttpServlet{
 		//resp.setCharacterEncoding("UTF-8");
 		//resp.getWriter().print("Chamou pelo método GET.");
 		
+		Cliente cliente = new Cliente();
+		cliente.setNome("");
 		String i = req.getParameter("i");
+		int indice = -1;
 		
-		if(i != null && i != ""){
-			clientService.excluir(Integer.parseInt(i));
+		if(i != null && i != "") {
+			indice = Integer.parseInt(i);
+		}
+		
+		String acao = req.getParameter("acao");
+		
+		if(i != null && i != "" && acao != null && acao != "") {
+			
+			if(acao.equals("excluir")) {
+				
+				clientService.excluir(Integer.parseInt(i));
+				
+			} else if (acao.equals("editar")) {
+				
+				indice = Integer.parseInt(i);
+				
+				cliente = clientService.buscarPorIndice(indice);
+			}
+			
 		}
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("cliente.jsp");
-	
+		req.setAttribute("cliente", cliente);
+		req.setAttribute("indice", indice);
+		
 		req.setAttribute("lista", clientService.getTodosClientes());
 		
 		dispatcher.forward(req, resp);
@@ -61,15 +83,31 @@ public class ClientServlet extends HttpServlet{
 		System.out.println("Chamou pelo método POST.");
 		
 		String nome = req.getParameter("name");
+		String i = req.getParameter("i");
+		int indice = -1;
+		
+		if(i != null && i != "") {
+			indice = Integer.parseInt(i);
+		}
 		
 		Cliente cliente = new Cliente();
 		cliente.setNome(nome);
 		
-		clientService.cadastrar(cliente);
+		clientService.salvar(indice, cliente);
+		
+		cliente = new Cliente();
+		cliente.setNome("");
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("cliente.jsp");
 		
-		req.setAttribute("msg", "Cadastrado com sucesso.");
+		if(indice == -1) {
+			req.setAttribute("msg", "Cadastrado com sucesso.");
+		} else {
+			req.setAttribute("msg", "Alterado com sucesso.");
+		}
+		
+		req.setAttribute("cliente", cliente);
+		req.setAttribute("indice", -1);
 		req.setAttribute("lista", clientService.getTodosClientes());
 		
 		dispatcher.forward(req, resp);
