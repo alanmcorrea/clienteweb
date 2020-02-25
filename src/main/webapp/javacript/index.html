@@ -1,0 +1,24 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+
+        <p id="p1"> Texto Inicial. </p>
+
+        <input type="text" id="caixa" value="Texto Inicial."/>
+
+        <button onclick="mudarTexto()">Alterar texto</button>
+
+        <script>
+
+            function mudarTexto(){
+                
+                var caixa = document.getElementById("caixa");
+                var p1 = document.getElementById("p1");
+                p1.innerHTML = caixa.value;
+                console.log(p1);
+            }
+        </script>
+    </body>
+</html>
